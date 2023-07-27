@@ -4,7 +4,7 @@ class ListaInfinitaTela extends StatefulWidget {
   @override
   _ListaInfinitaTelaState createState() => _ListaInfinitaTelaState();
 }
-
+//teste
 class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
   List<String> _items = List.generate(50, (index) => 'Item ${index + 1}');
 

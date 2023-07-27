@@ -153,8 +153,42 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                 print('Gênero: $genero');
                 print('Endereço: $endereco');
                 print('Descrição: $descricao');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ResponseScreen()),
+                );
               },
               child: Text('Comitar Incidente'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResponseScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading:
+            false, // Remover o botão de voltar padrão da App Bar
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Incidente criado com sucesso!',
+              style: TextStyle(fontSize: 20),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()));
+              },
+              child: Text('Voltar para Tela Inicial'),
             ),
           ],
         ),
