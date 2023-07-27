@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:incident/listaIncidentes.dart';
+
 
 void main() {
   runApp(const IncidentApp());
@@ -9,7 +11,12 @@ class IncidentApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MyHomePage());
+    return  MaterialApp(
+      initialRoute: '/', 
+      routes: {
+      '/' : (context) => const MyHomePage(),
+      '/listaInfinita' :(context) => ListaInfinitaTela(),
+    } ,);
   }
 }
 
@@ -43,6 +50,14 @@ class MyHomePage extends StatelessWidget {
                     );
                   },
                   child: Text('Criar Incidente'))),
+          Card(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context,'/listaInfinita');
+              },
+              child: Text('Lista de Incidentes'),
+            ),
+          ),        
         ],
       ),
     );
