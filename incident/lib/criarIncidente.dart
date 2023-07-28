@@ -99,12 +99,19 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   },
                 ),
                 SizedBox(height: 24),
+                TextFormField(
+                  decoration:
+                      InputDecoration(hintText: 'Adicionar Imagem ou Vídeo'),
+                  onChanged: (value) {
+                    setState(() {
+                      endereco = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Implemente aqui a lógica para submeter os dados do formulário.
-                      // Por exemplo, enviar os dados para um servidor ou salvá-los localmente.
-                      // Para esta demonstração, apenas exibiremos os dados no console.
                       print('Nome: $nome');
                       print('Idade: $idade');
                       print('Raça: $raca');
