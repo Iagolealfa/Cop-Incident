@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:incident/listaIncidentes.dart';
 import 'package:incident/criarIncidente.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
   runApp(const IncidentApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class IncidentApp extends StatelessWidget {
