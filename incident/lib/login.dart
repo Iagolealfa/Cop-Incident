@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:incident/main.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -28,6 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Sucesso! O usuário está logado.
       print('Usuário logado: ${userCredential.user?.email}');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(),
+        ),
+      );
     } catch (e) {
       // Houve um erro no processo de login.
       print('Erro de login: $e');
