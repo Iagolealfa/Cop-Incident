@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:incident/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String? _emailError;
   String? _passwordError;
@@ -53,6 +55,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       // Sucesso! Nova conta criada e o usuário está logado.
       print('Nova conta criada: ${userCredential.user?.email}');
 
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': email,
+        'name':
+            'Nome do Usuário', // Por exemplo, você pode definir um nome padrão aqui.
+        // Você pode adicionar mais campos como idade, endereço, etc.
+      });
       // Após a criação da nova conta bem-sucedida, navegar para a tela HomePage
       Navigator.pushReplacement(
         context,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:incident/main.dart';
 import 'package:incident/criarConta.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _login() async {
     try {
@@ -30,6 +32,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Sucesso! O usuário está logado.
       print('Usuário logado: ${userCredential.user?.email}');
+      // Agora, vamos obter as informações adicionais do usuário do Firestore usando o UID do usuário autenticado
+      DocumentSnapshot userDoc = await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
+      String? userName = userDoc.get('name'); // Obtemos o nome do usuário
+      // Você pode armazenar o nome do usuário em uma variável global ou em algum estado para uso posterior
+      print('Nome do usuário: $userName');
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
