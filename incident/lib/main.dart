@@ -3,7 +3,7 @@ import 'package:incident/listaIncidentes.dart';
 import 'package:incident/criarIncidente.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:incident/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +23,7 @@ class IncidentApp extends StatelessWidget {
       routes: {
         '/': (context) => const MyHomePage(),
         '/listaInfinita': (context) => ListaInfinitaTela(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }
@@ -64,6 +65,14 @@ class MyHomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/listaInfinita');
               },
               child: Text('Lista de Incidentes'),
+            ),
+          ),
+          Card(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: Text('LOGIN'),
             ),
           ),
         ],
