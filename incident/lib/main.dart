@@ -69,6 +69,7 @@ class MyHomePage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, '/listaInfinita');
+              _doSomethingRequiringAuth(context);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor:
@@ -99,7 +100,13 @@ class MyHomePage extends StatelessWidget {
             child: Text('Login'),
           ),
           ElevatedButton(
-              onPressed: signOut,
+              onPressed: () {
+                signOut();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     Colors.orange, // Change the background color of the button

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incident/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateIncidentScreen extends StatefulWidget {
   @override
@@ -7,12 +8,36 @@ class CreateIncidentScreen extends StatefulWidget {
 }
 
 class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
-  String? nome = '';
-  int idade = 0;
-  String? genero = '';
-  String? raca = '';
-  String? endereco = '';
-  String? descricao = '';
+  void _storeIncidentInFirestore(Incident incident) async {
+    try {
+      // Obtém uma referência para a coleção 'incidents'
+      CollectionReference incidentsRef =
+          FirebaseFirestore.instance.collection('incidents');
+
+      // Adiciona um novo documento à coleção 'incidents' com os dados do incident
+      await incidentsRef.add({
+        'nome': incident.nome,
+        'idade': incident.idade,
+        'genero': incident.genero,
+        'raca': incident.raca,
+        'endereco': incident.endereco,
+        'descricao': incident.descricao,
+      });
+
+      print('Incident armazenado com sucesso no Firestore!');
+    } catch (e) {
+      print('Erro ao armazenar o incident no Firestore: $e');
+    }
+  }
+
+  Incident _incident = Incident(
+    nome: '',
+    idade: 0,
+    genero: '',
+    raca: '',
+    endereco: '',
+    descricao: '',
+  );
   final _formKey = GlobalKey<FormState>();
 
   String? _validateField(String? value) {
@@ -41,7 +66,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
-                      nome = value;
+                      _incident.nome = value;
                     });
                   },
                 ),
@@ -52,7 +77,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
-                      idade = int.tryParse(value) ?? 0;
+                      _incident.idade = int.tryParse(value) ?? 0;
                     });
                   },
                 ),
@@ -61,7 +86,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
-                      raca = value;
+                      _incident.raca = value;
                     });
                   },
                 ),
@@ -71,7 +96,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
-                      genero = value;
+                      _incident.genero = value;
                     });
                   },
                 ),
@@ -82,7 +107,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
-                      endereco = value;
+                      _incident.endereco = value;
                     });
                   },
                 ),
@@ -94,7 +119,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   maxLines: null,
                   onChanged: (value) {
                     setState(() {
-                      descricao = value;
+                      _incident.descricao = value;
                     });
                   },
                 ),
@@ -104,7 +129,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       InputDecoration(hintText: 'Adicionar Imagem ou Vídeo'),
                   onChanged: (value) {
                     setState(() {
-                      endereco = value;
+                      _incident.endereco = value;
                     });
                   },
                 ),
@@ -112,12 +137,16 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print('Nome: $nome');
-                      print('Idade: $idade');
-                      print('Raça: $raca');
-                      print('Gênero: $genero');
-                      print('Endereço: $endereco');
-                      print('Descrição: $descricao');
+                      Incident newIncident = Incident(
+                        nome: _incident.nome,
+                        idade: _incident.idade,
+                        genero: _incident.genero,
+                        raca: _incident.raca,
+                        endereco: _incident.endereco,
+                        descricao: _incident.descricao,
+                      );
+
+                      _storeIncidentInFirestore(newIncident);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -134,6 +163,24 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
       ),
     );
   }
+}
+
+class Incident {
+  String nome;
+  int idade;
+  String genero;
+  String raca;
+  String endereco;
+  String descricao;
+
+  Incident({
+    required this.nome,
+    required this.idade,
+    required this.genero,
+    required this.raca,
+    required this.endereco,
+    required this.descricao,
+  });
 }
 
 class ResponseScreen extends StatelessWidget {
