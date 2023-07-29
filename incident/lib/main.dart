@@ -3,12 +3,14 @@ import 'package:incident/listaIncidentes.dart';
 import 'package:incident/criarIncidente.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
-  runApp(const IncidentApp());
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  runApp(const IncidentApp());
 }
 
 class IncidentApp extends StatelessWidget {
