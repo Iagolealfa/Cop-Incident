@@ -50,6 +50,15 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      print('Usuário deslogado com sucesso!');
+    } catch (e) {
+      print('Erro ao deslogar o usuário: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +87,12 @@ class MyHomePage extends StatelessWidget {
                     _doSomethingRequiringAuth(context);
                   },
                   child: Text('Criar Incidente'))),
+          Card(
+              child: ElevatedButton(
+                  onPressed: () {
+                    signOut();
+                  },
+                  child: Text('LOGOUT'))),
           Card(
             child: ElevatedButton(
               onPressed: () {
