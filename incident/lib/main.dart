@@ -98,6 +98,19 @@ class MyHomePage extends StatelessWidget {
             ),
             child: Text('Login'),
           ),
+          ElevatedButton(
+              onPressed: signOut,
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Colors.orange, // Change the background color of the button
+                foregroundColor:
+                    Colors.black, // Change the text color of the button
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+              child: Text('Logout'))
         ],
       ),
       body: Column(
