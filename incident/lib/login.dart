@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:incident/main.dart';
+import 'package:incident/criarConta.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Sucesso! O usuário está logado.
       print('Usuário logado: ${userCredential.user?.email}');
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => MyHomePage(),
@@ -45,8 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tela de Login'),
-      ),
+          title: Text('Tela de Login'), automaticallyImplyLeading: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -72,6 +72,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: _login,
               child: Text('Entrar'),
+            ),
+            SizedBox(height: 12),
+            TextButton(
+              onPressed: () {
+                // Navegar para a tela de criação de nova conta
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateAccountScreen(),
+                  ),
+                );
+              },
+              child: Text('Criar Nova Conta'),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:incident/criarIncidente.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:incident/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ class IncidentApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(),
+        '/': (context) => MyHomePage(),
         '/listaInfinita': (context) => ListaInfinitaTela(),
         '/login': (context) => LoginScreen(),
       },
@@ -30,7 +31,24 @@ class IncidentApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+  MyHomePage({super.key});
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _doSomethingRequiringAuth(BuildContext context) {
+    // Verifica se o usuário está autenticado
+    if (_auth.currentUser != null) {
+      // Se estiver autenticado, realiza a ação desejada
+      print('Ação realizada com sucesso!');
+    } else {
+      // Se não estiver autenticado, redireciona para a tela de login
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +75,14 @@ class MyHomePage extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => CreateIncidentScreen()),
                     );
+                    _doSomethingRequiringAuth(context);
                   },
                   child: Text('Criar Incidente'))),
           Card(
             child: ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/listaInfinita');
+                _doSomethingRequiringAuth(context);
               },
               child: Text('Lista de Incidentes'),
             ),
