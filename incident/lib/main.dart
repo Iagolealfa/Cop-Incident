@@ -53,48 +53,75 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
         title: const Text('Incident Watch'),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/listaInfinita');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Colors.orange, // Change the background color of the button
+              foregroundColor:
+                  Colors.black, // Change the text color of the button
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            ),
+            child: Text('Incidentes'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/login');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Colors.orange, // Change the background color of the button
+              foregroundColor:
+                  Colors.black, // Change the text color of the button
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            ),
+            child: Text('Login'),
+          ),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+        children: <Widget>[
           SizedBox(
             width: double.infinity,
             child: Card(
-                color: Colors.blue,
+                color: Colors.orange,
                 elevation: 5,
                 child: Text('Gráfico de calor dos incidentes')),
           ),
-          Card(
-              child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateIncidentScreen()),
-                    );
-                    _doSomethingRequiringAuth(context);
-                  },
-                  child: Text('Criar Incidente'))),
-          Card(
-            child: ElevatedButton(
+          ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/listaInfinita');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateIncidentScreen()),
+                );
                 _doSomethingRequiringAuth(context);
               },
-              child: Text('Lista de Incidentes'),
-            ),
-          ),
-          Card(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              child: Text('LOGIN'),
-            ),
-          ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors
+                    .orange[100], // Change the background color of the button
+                foregroundColor:
+                    Colors.black, // Change the text color of the button
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+              child: Text('Relatar Incidente')),
         ],
       ),
     );
