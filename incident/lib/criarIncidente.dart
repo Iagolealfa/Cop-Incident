@@ -70,9 +70,9 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 10),
                 TextFormField(
-                  decoration: InputDecoration(hintText: 'Sua Idade'),
+                  decoration: InputDecoration(hintText: 'Idade'),
                   keyboardType: TextInputType.number,
                   validator: _validateField,
                   onChanged: (value) {
@@ -81,8 +81,9 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
+                SizedBox(height: 10),
                 TextFormField(
-                  decoration: InputDecoration(hintText: 'Sua Raça'),
+                  decoration: InputDecoration(hintText: 'Raça'),
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
@@ -90,9 +91,9 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 10),
                 TextFormField(
-                  decoration: InputDecoration(hintText: 'Seu Gênero'),
+                  decoration: InputDecoration(hintText: 'Gênero'),
                   validator: _validateField,
                   onChanged: (value) {
                     setState(() {
@@ -100,7 +101,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 10),
                 TextFormField(
                   decoration:
                       InputDecoration(hintText: 'Endereço do Incidente'),
@@ -111,7 +112,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 10),
                 TextFormField(
                   decoration:
                       InputDecoration(hintText: 'Descrição do Incidente'),
@@ -123,7 +124,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 10),
                 TextFormField(
                   decoration:
                       InputDecoration(hintText: 'Adicionar Imagem ou Vídeo'),
@@ -133,7 +134,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
