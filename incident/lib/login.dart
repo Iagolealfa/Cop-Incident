@@ -56,7 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[50],
       appBar: AppBar(title: Text('Login'), automaticallyImplyLeading: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -67,7 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
             Text(
               'CopWatch',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 34, // Change the font size
+                fontFamily: 'Bebes Neue', // Change the font family
                 fontWeight: FontWeight.bold,
               ),
             ),
