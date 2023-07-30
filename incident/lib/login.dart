@@ -22,7 +22,19 @@ class _LoginScreenState extends State<LoginScreen> {
       final String password = _passwordController.text.trim();
 
       if (email.isEmpty || password.isEmpty) {
-        // Verifica se os campos estão vazios
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Erro'),
+            content: Text('É obrigatório preencher todos os campos.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
         return;
       }
 
@@ -50,6 +62,19 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } catch (e) {
       // Houve um erro no processo de login.
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Erro'),
+          content: Text('Login ou senha incorretos.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Ok'),
+            ),
+          ],
+        ),
+      );
       print('Erro de login: $e');
     }
   }
