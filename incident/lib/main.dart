@@ -103,7 +103,7 @@ class MyHomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/listaInfinita');
                 _doSomethingRequiringAuth(context);
               },
-            ), 
+            ),
             Visibility(
                 visible: true,
                 child: IconButton(
@@ -127,8 +127,7 @@ class MyHomePage extends StatelessWidget {
           ],
         ),
         body: StreamBuilder<User?>(
-            stream: _auth
-                .authStateChanges(),
+            stream: _auth.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -139,27 +138,7 @@ class MyHomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Visibility(
-                        visible: isLoggedIn2,
-                        child: IconButton(
-                          icon: Icon(Icons.logout_rounded),
-                          onPressed: () {
-                            signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                            );
-                          },
-                        )),
-                    Visibility(
-                        visible: !isLoggedIn2,
-                        child: IconButton(
-                          icon: Icon(Icons.login_rounded),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/login');
-                          },
-                        )),
+                    
                     SizedBox(
                         width: double.infinity,
                         child: Image.asset('assets/images/Incidentes.jpg')),
@@ -173,10 +152,8 @@ class MyHomePage extends StatelessWidget {
                           _doSomethingRequiringAuth(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors
-                              .orange,
-                          foregroundColor: Colors
-                              .black,
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
