@@ -13,10 +13,6 @@ void main() async {
   );
   runApp(const IncidentApp());
 }
-/*
-class LoggedIn extends ChangeNotifier {
-  bool isLoggedIn = false;
-}*/
 
 class IncidentApp extends StatelessWidget {
   const IncidentApp({super.key});
@@ -36,13 +32,12 @@ class IncidentApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.orange[100],
         textTheme: TextTheme(
             labelLarge: TextStyle(
-              // Change the text style for Buttons
-              fontSize: 26, // Change the font size
+              fontSize: 26,
               fontFamily: 'Orienta',
             ),
             titleLarge: TextStyle(
-              fontSize: 26, // Change font size
-              fontWeight: FontWeight.bold, // Change font weight
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
               fontFamily: 'Bebes Neue',
             )),
         appBarTheme: AppBarTheme(
@@ -57,15 +52,10 @@ class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  //bool isLoggedIn = false; //Visibility attempt that didnt work
-
   void _doSomethingRequiringAuth(BuildContext context) {
-    // Verifica se o usuário está autenticado
     if (_auth.currentUser != null) {
-      // Se estiver autenticado, realiza a ação desejada
       print('Ação realizada com sucesso!');
     } else {
-      // Se não estiver autenticado, redireciona para a tela de login
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -137,11 +127,9 @@ class MyHomePage extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                // verifica se o usuario esta logado
-                final isLoggedIn2 = snapshot.data != null;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
                         width: double.infinity,
