@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:incident/main.dart';
 import 'package:incident/criarConta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:incident/recuperarSenha.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -104,6 +105,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               },
               child: Text('Criar Nova Conta'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ForgotPasswordScreen(),
+                  ),
+                );
+              },
+              child: Text('Esqueci minha senha'),
             ),
           ],
         ),

@@ -59,6 +59,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
           child: Form(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
