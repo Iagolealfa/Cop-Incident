@@ -13,6 +13,10 @@ void main() async {
   );
   runApp(const IncidentApp());
 }
+/*
+class LoggedIn extends ChangeNotifier {
+  bool IsLogged = false;
+}*/
 
 class IncidentApp extends StatelessWidget {
   const IncidentApp({super.key});
@@ -33,6 +37,8 @@ class IncidentApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  bool isLogged = false;
 
   void _doSomethingRequiringAuth(BuildContext context) {
     // Verifica se o usuário está autenticado
@@ -64,48 +70,63 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        title: const Text('Incident Watch'),
+        backgroundColor: Colors.orange,
+        title: const Text(
+          'CopWatch',
+          style: TextStyle(
+            fontSize: 30, // Change the font size
+            fontFamily: 'Bebes Neue', // Change the font family
+            fontWeight: FontWeight.bold, // Change the font weight
+            color: Colors.white, // Change the text color
+            fontStyle: FontStyle.normal, // Change the font style
+          ),
+        ),
         actions: <Widget>[
-          ElevatedButton(
+          IconButton(
+            icon: Icon(Icons
+                .list_alt_rounded), // Icon as an action button on the app bar
             onPressed: () {
               Navigator.pushNamed(context, '/listaInfinita');
               _doSomethingRequiringAuth(context);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Colors.orange, // Change the background color of the button
-              foregroundColor:
-                  Colors.black, // Change the text color of the button
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            ),
-            child: Text('Incidentes'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/login');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Colors.orange, // Change the background color of the button
-              foregroundColor:
-                  Colors.black, // Change the text color of the button
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            ),
-            child: Text('Login'),
-          ),
+          Visibility(
+              visible: !isLogged,
+              child: IconButton(
+                icon: Icon(Icons.login_rounded),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+              )),
+          Visibility(
+              visible: !isLogged,
+              child: IconButton(
+                icon: Icon(Icons.logout_rounded),
+                onPressed: () {
+                  signOut();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+              ))
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(
+              width: double.infinity,
+              child: Image.asset('assets/images/Incidentes.jpg')),
           ElevatedButton(
               onPressed: () {
-                signOut();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => CreateIncidentScreen()),
                 );
+                _doSomethingRequiringAuth(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -117,40 +138,16 @@ class MyHomePage extends StatelessWidget {
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
-              child: Text('Logout'))
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SizedBox(
-            width: double.infinity,
-            child: Card(
-                color: Colors.orange,
-                elevation: 5,
-                child: Text('Gráfico de calor dos incidentes')),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreateIncidentScreen()),
-                );
-                _doSomethingRequiringAuth(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors
-                    .orange[100], // Change the background color of the button
-                foregroundColor:
-                    Colors.black, // Change the text color of the button
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              child: Text(
+                'Relatar Incidente',
+                style: TextStyle(
+                  fontSize: 18, // Change the font size
+                  fontFamily: 'Orienta', // Change the font family
+                  fontWeight: FontWeight.normal, // Change the font weight
+                  color: Colors.black, // Change the text color
+                  fontStyle: FontStyle.normal, // Change the font style
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              ),
-              child: Text('Relatar Incidente')),
+              )),
         ],
       ),
     );
