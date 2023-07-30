@@ -24,6 +24,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final String email = _emailController.text.trim();
 
     try {
+      // Verificar se o e-mail está cadastrado
+      List<String> methods = await _auth.fetchSignInMethodsForEmail(email);
+      if (methods.isEmpty) {
+        // Caso o e-mail não esteja cadastrado, exibir mensagem de erro
+        setState(() {
+          _emailError =
+              "Não foi possível encontrar um usuário com esse e-mail.";
+        });
+        return;
+      }
+
       await _auth.sendPasswordResetEmail(email: email);
       // Caso a requisição seja bem-sucedida, exiba uma mensagem para o usuário
       showDialog(
