@@ -88,10 +88,10 @@ class MyHomePage extends StatelessWidget {
           title: const Text(
             'CopWatch',
             style: TextStyle(
-              fontSize: 34, // Change the font size
+              fontSize: 26, // Change the font size
               fontFamily: 'Bebes Neue', // Change the font family
               fontWeight: FontWeight.bold, // Change the font weight
-              color: Colors.white, // Change the text color
+              color: Color.fromARGB(255, 0, 0, 0), // Change the text color
               fontStyle: FontStyle.normal, // Change the font style
             ),
           ),
@@ -103,9 +103,9 @@ class MyHomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/listaInfinita');
                 _doSomethingRequiringAuth(context);
               },
-            ), /*
+            ),
             Visibility(
-                visible: !isLoggedIn,
+                visible: true,
                 child: IconButton(
                   icon: Icon(Icons.login_rounded),
                   onPressed: () {
@@ -113,7 +113,7 @@ class MyHomePage extends StatelessWidget {
                   },
                 )),
             Visibility(
-                visible: !isLoggedIn,
+                visible: true,
                 child: IconButton(
                   icon: Icon(Icons.logout_rounded),
                   onPressed: () {
@@ -123,44 +123,22 @@ class MyHomePage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-                ))*/
-            //will come back to this. Needs a builder for Streambuilder to work on the app bar.
+                ))
           ],
         ),
         body: StreamBuilder<User?>(
-            stream: _auth
-                .authStateChanges(), // Stream to listen to authentication state changes
+            stream: _auth.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                // Check if the user is logged in
+                // verifica se o usuario esta logado
                 final isLoggedIn2 = snapshot.data != null;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Visibility(
-                        visible: isLoggedIn2,
-                        child: IconButton(
-                          icon: Icon(Icons.logout_rounded),
-                          onPressed: () {
-                            signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                            );
-                          },
-                        )),
-                    Visibility(
-                        visible: !isLoggedIn2,
-                        child: IconButton(
-                          icon: Icon(Icons.login_rounded),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/login');
-                          },
-                        )),
+                    
                     SizedBox(
                         width: double.infinity,
                         child: Image.asset('assets/images/Incidentes.jpg')),
@@ -174,10 +152,8 @@ class MyHomePage extends StatelessWidget {
                           _doSomethingRequiringAuth(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors
-                              .orange, // Change the background color of the button
-                          foregroundColor: Colors
-                              .black, // Change the text color of the button
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
