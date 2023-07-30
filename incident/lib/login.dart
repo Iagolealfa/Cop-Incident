@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Login'), automaticallyImplyLeading: false),
       body: SingleChildScrollView(
-        
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
