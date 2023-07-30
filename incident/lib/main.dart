@@ -132,8 +132,7 @@ class MyHomePage extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                // verifica se o usuario esta logado
-                final isLoggedIn2 = snapshot.data != null;
+              
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,

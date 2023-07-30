@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:incident/editarIncidente.dart';
 
 class ListaInfinitaTela extends StatefulWidget {
   @override
@@ -16,7 +17,8 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
   }
 
   void _buscarIncidents() {
-    _incidentsStream = FirebaseFirestore.instance.collection('incidents').snapshots();
+    _incidentsStream =
+        FirebaseFirestore.instance.collection('incidents').snapshots();
   }
 
   @override
@@ -48,7 +50,10 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
                 direction: DismissDirection.horizontal,
                 onDismissed: (direction) async {
                   // Remove o item do Firestore
-                  await FirebaseFirestore.instance.collection('incidents').doc(itemId).delete();
+                  await FirebaseFirestore.instance
+                      .collection('incidents')
+                      .doc(itemId)
+                      .delete();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -57,8 +62,12 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
                         label: 'Desfazer',
                         onPressed: () async {
                           // Re-adiciona o item ao Firestore
-                          final Map<String, dynamic> itemMap = item as Map<String, dynamic>;
-                          await FirebaseFirestore.instance.collection('incidents').doc(itemId).set(itemMap);
+                          final Map<String, dynamic> itemMap =
+                              item as Map<String, dynamic>;
+                          await FirebaseFirestore.instance
+                              .collection('incidents')
+                              .doc(itemId)
+                              .set(itemMap);
                         },
                       ),
                     ),
@@ -72,9 +81,18 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
                     color: Colors.white,
                   ),
                 ),
-                 child: ListTile(
-                  title: Text( '$itemId'),
-                  // Adicione outros widgets relevantes para exibir outros dados do documento
+                child: ListTile(
+                  title: Text('$itemId'),
+                  onTap: () {
+                    // Abrir a tela de edição ao tocar no item
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EditarItemTela(itemId: itemId, itemData: item as Map<String, dynamic>),
+                      ),
+                    );
+                  },
                 ),
               );
             },
