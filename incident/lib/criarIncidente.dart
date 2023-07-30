@@ -71,7 +71,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 25),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Idade'),
                   keyboardType: TextInputType.number,
@@ -82,7 +82,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 25),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Raça'),
                   validator: _validateField,
@@ -92,7 +92,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 25),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Gênero'),
                   validator: _validateField,
@@ -102,7 +102,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 25),
                 TextFormField(
                   decoration:
                       InputDecoration(hintText: 'Endereço do Incidente'),
@@ -113,7 +113,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 25),
                 TextFormField(
                   decoration:
                       InputDecoration(hintText: 'Descrição do Incidente'),
@@ -126,38 +126,40 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10),
-                TextFormField(
-                  decoration:
-                      InputDecoration(hintText: 'Adicionar Imagem ou Vídeo'),
-                  onChanged: (value) {
-                    setState(() {
-                      _incident.endereco = value;
-                    });
-                  },
+                SizedBox(height: 5),
+                Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add_photo_alternate,
+                      size: 50,
+                    ), // Icon as an action button on the app bar
+                    onPressed: () {},
+                  ),
                 ),
                 SizedBox(height: 50),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Incident newIncident = Incident(
-                        nome: _incident.nome,
-                        idade: _incident.idade,
-                        genero: _incident.genero,
-                        raca: _incident.raca,
-                        endereco: _incident.endereco,
-                        descricao: _incident.descricao,
-                      );
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Incident newIncident = Incident(
+                          nome: _incident.nome,
+                          idade: _incident.idade,
+                          genero: _incident.genero,
+                          raca: _incident.raca,
+                          endereco: _incident.endereco,
+                          descricao: _incident.descricao,
+                        );
 
-                      _storeIncidentInFirestore(newIncident);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResponseScreen()),
-                      );
-                    }
-                  },
-                  child: Text('Gerar Incidente'),
+                        _storeIncidentInFirestore(newIncident);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ResponseScreen()),
+                        );
+                      }
+                    },
+                    child: Text('Gerar Incidente'),
+                  ),
                 ),
               ],
             ),

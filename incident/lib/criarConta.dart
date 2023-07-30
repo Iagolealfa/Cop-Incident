@@ -13,6 +13,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final TextEditingController _usuarioController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -32,9 +33,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
+    final String usuario = _usuarioController.text.trim();
 
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      // Verifica se os campos estão vazios
+    if (email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty ||
+        usuario.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Erro'),
+          content: Text('É obrigatório preencher todos os campos.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Ok'),
+            ),
+          ],
+        ),
+      );
       return;
     }
 
@@ -52,16 +69,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         password: password,
       );
 
-      // Sucesso! Nova conta criada e o usuário está logado.
       print('Nova conta criada: ${userCredential.user?.email}');
 
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'email': email,
-        'name':
-            'Nome do Usuário', // Por exemplo, você pode definir um nome padrão aqui.
-        // Você pode adicionar mais campos como idade, endereço, etc.
+        'usuario': usuario,
       });
-      // Após a criação da nova conta bem-sucedida, navegar para a tela HomePage
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -97,6 +111,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            TextField(
+              controller: _usuarioController,
+              decoration: InputDecoration(
+                labelText: 'Usuário',
+              ),
+            ),
+            SizedBox(height: 16),
             TextField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
