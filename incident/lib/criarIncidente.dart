@@ -59,6 +59,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
           child: Form(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
@@ -117,6 +118,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   decoration:
                       InputDecoration(hintText: 'Descrição do Incidente'),
                   validator: _validateField,
+                  maxLength: 500,
                   maxLines: null,
                   onChanged: (value) {
                     setState(() {
