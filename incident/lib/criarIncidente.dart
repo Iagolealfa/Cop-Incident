@@ -117,6 +117,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   decoration:
                       InputDecoration(hintText: 'Descrição do Incidente'),
                   validator: _validateField,
+                  maxLength: 500,
                   maxLines: null,
                   onChanged: (value) {
                     setState(() {
