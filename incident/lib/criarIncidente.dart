@@ -16,6 +16,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
 
       // Adiciona um novo documento à coleção 'incidents' com os dados do incident
       await incidentsRef.add({
+        'titulo': incident.titulo,
         'nome': incident.nome,
         'idade': incident.idade,
         'genero': incident.genero,
@@ -31,6 +32,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
   }
 
   Incident _incident = Incident(
+    titulo: '',
     nome: '',
     idade: 0,
     genero: '',
@@ -62,6 +64,18 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'Título'),
+                  validator: _validateField,
+                  onChanged: (value) {
+                    setState(() {
+                      _incident.titulo = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 25,
+                ),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Seu Nome'),
                   validator: _validateField,
@@ -142,6 +156,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Incident newIncident = Incident(
+                          titulo: _incident.titulo,
                           nome: _incident.nome,
                           idade: _incident.idade,
                           genero: _incident.genero,
@@ -171,6 +186,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
 }
 
 class Incident {
+  String titulo;
   String nome;
   int idade;
   String genero;
@@ -179,6 +195,7 @@ class Incident {
   String descricao;
 
   Incident({
+    required this.titulo,
     required this.nome,
     required this.idade,
     required this.genero,
