@@ -211,7 +211,7 @@ class ResponseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading:
-            false, // Remover o botão de voltar padrão da App Bar
+            false, 
       ),
       body: Center(
         child: Column(
@@ -223,8 +223,8 @@ class ResponseScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()));
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: Text('Voltar para Tela Inicial'),
             ),
