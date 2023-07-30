@@ -36,10 +36,15 @@ class IncidentApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.orange[100],
         textTheme: TextTheme(
             labelLarge: TextStyle(
-          // Change the text style for Buttons
-          fontSize: 26, // Change the font size
-          fontFamily: 'Orienta',
-        )),
+              // Change the text style for Buttons
+              fontSize: 26, // Change the font size
+              fontFamily: 'Orienta',
+            ),
+            titleLarge: TextStyle(
+              fontSize: 26, // Change font size
+              fontWeight: FontWeight.bold, // Change font weight
+              fontFamily: 'Bebes Neue',
+            )),
         appBarTheme: AppBarTheme(
             iconTheme: IconThemeData(color: Colors.black),
             color: Colors.orange),
@@ -138,7 +143,6 @@ class MyHomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    
                     SizedBox(
                         width: double.infinity,
                         child: Image.asset('assets/images/Incidentes.jpg')),
