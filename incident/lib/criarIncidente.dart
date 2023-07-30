@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:incident/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateIncidentScreen extends StatefulWidget {
@@ -210,8 +209,7 @@ class ResponseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading:
-            false, 
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
