@@ -19,7 +19,7 @@ class _EditarItemTelaState extends State<EditarItemTela> {
   @override
   void initState() {
     super.initState();
-    _tituloController.text = widget.itemData['title'];
+    _tituloController.text = widget.itemData['titulo'];
     _descricaoController.text = widget.itemData['descricao'];
     _enderecoController.text = widget.itemData['endereco'];
   }
@@ -63,7 +63,10 @@ class _EditarItemTelaState extends State<EditarItemTela> {
     final novaDescricao = _descricaoController.text;
     final novoEndereco = _enderecoController.text;
 
-    await FirebaseFirestore.instance.collection('incidents').doc(widget.itemId).update({
+    await FirebaseFirestore.instance
+        .collection('incidents')
+        .doc(widget.itemId)
+        .update({
       'title': novoTitulo,
       'descricao': novaDescricao,
       'date': novoEndereco,
