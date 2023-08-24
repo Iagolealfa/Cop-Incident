@@ -11,26 +11,34 @@ class CreateIncidentScreen extends StatefulWidget {
 class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
   File _storedImage = File('assets/images/Incidentes.jpg');
 
-  _takePicture() async {
+  Future<void> _takePicture() async {
     final ImagePicker _picker = ImagePicker();
-    XFile imageFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-    ) as XFile;
+    XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+    );
 
-    setState(() {
-      _storedImage = File(imageFile.path);
-    });
+    if (imageFile != null) {
+      setState(() {
+        _storedImage = File(imageFile.path);
+      });
+    } else {
+      print("Nenhuma imagem selecionada");
+    }
   }
 
-  _takePhoto() async {
+  Future<void> _takePhoto() async {
     final ImagePicker _picker = ImagePicker();
-    XFile imageFile = await _picker.pickImage(
-      source: ImageSource.camera,
-    ) as XFile;
+    XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
-    setState(() {
-      _storedImage = File(imageFile.path);
-    });
+    if (imageFile != null) {
+      setState(() {
+        _storedImage = File(imageFile.path);
+      });
+    } else {
+      print("Nenhuma imagem selecionada");
+    }
   }
 
   void _storeIncidentInFirestore(Incident incident) async {
@@ -173,7 +181,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       size: 50,
                     ),
                     onPressed: () {
-                      _takePicture();
+                      _takePhoto();
                     },
                   ),
                 ),
@@ -184,7 +192,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       size: 50,
                     ),
                     onPressed: () {
-                      _takePhoto();
+                      _takePicture();
                     },
                   ),
                 ),
