@@ -3,6 +3,54 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:incident/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class CreateAccountModel {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<UserCredential?> createAccount(
+      String email, String password, String usuario) async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': email,
+        'usuario': usuario,
+      });
+
+      return userCredential;
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+class CreateAccountController {
+  final CreateAccountModel _model;
+
+  CreateAccountController(this._model);
+
+  Future<void> createAccount(BuildContext context, String email,
+      String password, String confirmPassword, String usuario) async {
+    UserCredential? userCredential =
+        await _model.createAccount(email, password, usuario);
+
+    if (userCredential != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(),
+        ),
+      );
+    } else {
+      // Tratar erros ao criar conta
+    }
+  }
+}
+
 class CreateAccountScreen extends StatefulWidget {
   @override
   _CreateAccountScreenState createState() => _CreateAccountScreenState();
@@ -14,8 +62,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _usuarioController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CreateAccountModel _model = CreateAccountModel();
+  late final CreateAccountController _controller;
 
   String? _emailError;
   String? _passwordError;
@@ -25,6 +73,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       _emailError = null;
       _passwordError = null;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = CreateAccountController(_model);
   }
 
   Future<void> _createAccount() async {
@@ -62,41 +116,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       return;
     }
 
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      print('Nova conta criada: ${userCredential.user?.email}');
-
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'email': email,
-        'usuario': usuario,
-      });
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(),
-        ),
-      );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        setState(() {
-          if (e.code == 'email-already-in-use') {
-            _emailError = "O e-mail já está em uso por outra conta.";
-          } else {
-            _emailError = "Erro ao criar nova conta: ${e.message}";
-          }
-        });
-      } else {
-        setState(() {
-          _emailError = "Erro ao criar nova conta: $e";
-        });
-      }
-    }
+    _controller.createAccount(
+        context, email, password, confirmPassword, usuario);
   }
 
   @override

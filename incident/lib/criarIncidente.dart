@@ -3,51 +3,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-class CreateIncidentScreen extends StatefulWidget {
-  @override
-  _CreateIncidentScreenState createState() => _CreateIncidentScreenState();
-}
-
-class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
+class CreateIncidentModel {
   File _storedImage = File('assets/images/Incidentes.jpg');
 
-  Future<void> _takePicture() async {
+  Future<void> takePicture() async {
     final ImagePicker _picker = ImagePicker();
     XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
     );
 
     if (imageFile != null) {
-      setState(() {
-        _storedImage = File(imageFile.path);
-      });
+      _storedImage = File(imageFile.path);
     } else {
       print("Nenhuma imagem selecionada");
     }
   }
 
-  Future<void> _takePhoto() async {
+  Future<void> takePhoto() async {
     final ImagePicker _picker = ImagePicker();
     XFile? imageFile = await _picker.pickImage(
       source: ImageSource.gallery,
     );
 
     if (imageFile != null) {
-      setState(() {
-        _storedImage = File(imageFile.path);
-      });
+      _storedImage = File(imageFile.path);
     } else {
       print("Nenhuma imagem selecionada");
     }
   }
 
-  void _storeIncidentInFirestore(Incident incident) async {
+  void storeIncidentInFirestore(Incident incident) async {
     try {
-      // Obtém uma referência para a coleção 'incidents'
       CollectionReference incidentsRef =
           FirebaseFirestore.instance.collection('incidents');
 
-      // Adiciona um novo documento à coleção 'incidents' com os dados do incident
       await incidentsRef.add({
         'titulo': incident.titulo,
         'nome': incident.nome,
@@ -63,6 +52,39 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
       print('Erro ao armazenar o incident no Firestore: $e');
     }
   }
+}
+
+class CreateIncidentController {
+  final CreateIncidentModel _model;
+
+  CreateIncidentController(this._model);
+
+  Future<void> createIncident(BuildContext context, Incident incident) async {
+    _model.storeIncidentInFirestore(incident);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ResponseScreen()),
+    );
+  }
+
+  Future<void> takePicture() async {
+    await _model.takePicture();
+  }
+
+  Future<void> takePhoto() async {
+    await _model.takePhoto();
+  }
+}
+
+class CreateIncidentScreen extends StatefulWidget {
+  @override
+  _CreateIncidentScreenState createState() => _CreateIncidentScreenState();
+}
+
+class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
+  CreateIncidentModel _model = CreateIncidentModel();
+  late CreateIncidentController _controller;
 
   Incident _incident = Incident(
     titulo: '',
@@ -80,6 +102,12 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
       return 'Este campo é obrigatório';
     }
     return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = CreateIncidentController(_model);
   }
 
   @override
@@ -106,9 +134,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     });
                   },
                 ),
-                SizedBox(
-                  height: 25,
-                ),
+                SizedBox(height: 25),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Seu Nome'),
                   validator: _validateField,
@@ -181,7 +207,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       size: 50,
                     ),
                     onPressed: () {
-                      _takePhoto();
+                      _controller.takePhoto();
                     },
                   ),
                 ),
@@ -192,7 +218,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       size: 50,
                     ),
                     onPressed: () {
-                      _takePicture();
+                      _controller.takePicture();
                     },
                   ),
                 ),
@@ -201,22 +227,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Incident newIncident = Incident(
-                          titulo: _incident.titulo,
-                          nome: _incident.nome,
-                          idade: _incident.idade,
-                          genero: _incident.genero,
-                          raca: _incident.raca,
-                          endereco: _incident.endereco,
-                          descricao: _incident.descricao,
-                        );
-
-                        _storeIncidentInFirestore(newIncident);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ResponseScreen()),
-                        );
+                        _controller.createIncident(context, _incident);
                       }
                     },
                     child: Text('Gerar Incidente'),
@@ -255,11 +266,11 @@ class ResponseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Column(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+        ),
+        body: Center(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -274,8 +285,6 @@ class ResponseScreen extends StatelessWidget {
               child: Text('Voltar para Tela Inicial'),
             ),
           ],
-        ),
-      ),
-    );
+        )));
   }
 }

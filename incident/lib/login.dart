@@ -5,28 +5,66 @@ import 'package:incident/criarConta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident/recuperarSenha.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class LoginModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> _login() async {
+  Future<UserCredential?> login(String email, String password) async {
     try {
-      final String email = _emailController.text.trim();
-      final String password = _passwordController.text.trim();
-
       if (email.isEmpty || password.isEmpty) {
+        return null;
+      }
+
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      return userCredential;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<String?> getUserName(String uid) async {
+    try {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(uid).get();
+      String? userName = userDoc.get('usuario');
+      return userName;
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+class LoginController {
+  final LoginModel _model;
+
+  LoginController(this._model);
+
+  Future<void> login(
+      BuildContext context, String email, String password) async {
+    UserCredential? userCredential = await _model.login(email, password);
+
+    if (userCredential != null) {
+      String? userName = await _model.getUserName(userCredential.user!.uid);
+      if (userName != null) {
+        print('Usuário logado: ${userCredential.user!.email}');
+        print('Nome do usuário: $userName');
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(),
+          ),
+        );
+      } else {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Erro'),
-            content: Text('É obrigatório preencher todos os campos.'),
+            content: Text('Erro ao obter o nome do usuário.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -35,33 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         );
-        return;
       }
-
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Sucesso! O usuário está logado.
-      print('Usuário logado: ${userCredential.user?.email}');
-      // Agora, vamos obter as informações adicionais do usuário do Firestore usando o UID do usuário autenticado
-      DocumentSnapshot userDoc = await _firestore
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .get();
-      String? userName = userDoc.get('name'); // Obtemos o nome do usuário
-      // Você pode armazenar o nome do usuário em uma variável global ou em algum estado para uso posterior
-      print('Nome do usuário: $userName');
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(),
-        ),
-      );
-    } catch (e) {
-      // Houve um erro no processo de login.
+    } else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -75,8 +88,25 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       );
-      print('Erro de login: $e');
     }
+  }
+}
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final LoginModel _model = LoginModel();
+  late final LoginController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = LoginController(_model);
   }
 
   @override
@@ -92,8 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
             Text(
               'CopWatch',
               style: TextStyle(
-                fontSize: 34, // Change the font size
-                fontFamily: 'Bebes Neue', // Change the font family
+                fontSize: 34,
+                fontFamily: 'Bebes Neue',
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -115,7 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _login,
+              onPressed: () {
+                _controller.login(
+                  context,
+                  _emailController.text,
+                  _passwordController.text,
+                );
+              },
               child: Text('Entrar'),
             ),
             SizedBox(height: 12),
