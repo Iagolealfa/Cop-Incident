@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class CreateIncidentScreen extends StatefulWidget {
   @override
@@ -7,6 +9,30 @@ class CreateIncidentScreen extends StatefulWidget {
 }
 
 class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
+  File _storedImage = File('assets/images/Incidentes.jpg');
+
+  _takePicture() async {
+    final ImagePicker _picker = ImagePicker();
+    XFile imageFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+    ) as XFile;
+
+    setState(() {
+      _storedImage = File(imageFile.path);
+    });
+  }
+
+  _takePhoto() async {
+    final ImagePicker _picker = ImagePicker();
+    XFile imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+    ) as XFile;
+
+    setState(() {
+      _storedImage = File(imageFile.path);
+    });
+  }
+
   void _storeIncidentInFirestore(Incident incident) async {
     try {
       // Obtém uma referência para a coleção 'incidents'
@@ -145,8 +171,21 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     icon: Icon(
                       Icons.add_photo_alternate,
                       size: 50,
-                    ), // Icon as an action button on the app bar
-                    onPressed: () {},
+                    ),
+                    onPressed: () {
+                      _takePicture();
+                    },
+                  ),
+                ),
+                Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.camera_alt_rounded,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      _takePhoto();
+                    },
                   ),
                 ),
                 SizedBox(height: 50),
