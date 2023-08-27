@@ -62,7 +62,8 @@ class LoginController {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(),
+            builder: (context) =>
+                MyHomePage(incidentLocations: incidentLocations),
           ),
         );
       } else {

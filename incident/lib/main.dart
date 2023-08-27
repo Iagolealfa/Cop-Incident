@@ -8,7 +8,13 @@ import 'firebase_options.dart';
 import 'package:incident/login.dart';
 import 'package:incident/mapaHome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
+final List<LatLng> incidentLocations = [
+  LatLng(-8.058488275256941, -34.92830895827107),
+  LatLng(-8.05788189940112, -34.92422613999412)
+];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -26,7 +32,7 @@ class IncidentApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(),
+        '/': (context) => MyHomePage(incidentLocations: incidentLocations),
         '/listaInfinita': (context) => ListaInfinitaTela(),
         '/login': (context) => LoginScreen(),
       },
@@ -52,12 +58,9 @@ class IncidentApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  final List<LatLng> incidentLocations = [
-    LatLng(-8.058488275256941, -34.92830895827107),
-    LatLng(-8.05788189940112, -34.92422613999412)
-  ];
+  final List<LatLng> incidentLocations;
 
-  MyHomePage({super.key});
+  MyHomePage({Key? key, required this.incidentLocations}) : super(key: key);
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _doSomethingRequiringAuth(BuildContext context) {
@@ -73,118 +76,56 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
-  Future<void> signOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      print('Usuário deslogado com sucesso!');
-    } catch (e) {
-      print('Erro ao deslogar o usuário: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.orange[100],
-        appBar: AppBar(
-          backgroundColor: Colors.orange,
-          title: const Text(
-            'CopWatch',
-            style: TextStyle(
-              fontSize: 26, // Change the font size
-              fontFamily: 'Bebes Neue', // Change the font family
-              fontWeight: FontWeight.bold, // Change the font weight
-              color: Color.fromARGB(255, 0, 0, 0), // Change the text color
-              fontStyle: FontStyle.normal, // Change the font style
+    var markers = incidentLocations.map((latlng) {
+      return Marker(
+        width: 80.0,
+        height: 80.0,
+        point: latlng,
+        builder: (ctx) => GestureDetector(
+          onTap: () {
+            ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+              content: Text(
+                  "Latitude = ${latlng.latitude.toString()} :: Longitude = ${latlng.longitude.toString()}"),
+            ));
+          },
+          child: Container(
+            child: Icon(
+              Icons.pin_drop,
+              color: Colors.red,
             ),
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons
-                  .list_alt_rounded), // Icon as an action button on the app bar
-              onPressed: () {
-                Navigator.pushNamed(context, '/listaInfinita');
-                _doSomethingRequiringAuth(context);
-              },
-            ),
-            Visibility(
-                visible: true,
-                child: IconButton(
-                  icon: Icon(Icons.login_rounded),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
-                )),
-            Visibility(
-                visible: true,
-                child: IconButton(
-                  icon: Icon(Icons.logout_rounded),
-                  onPressed: () {
-                    signOut();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  },
-                ))
-          ],
         ),
-        drawer: CustomDrawer(),
-        body: StreamBuilder<User?>(
-            stream: _auth.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Map(incidentLocations)),
-                          );
-                          _doSomethingRequiringAuth(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                        ),
-                        child: Text(
-                          'Mapa de calor',
-                        )),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CreateIncidentScreen()),
-                          );
-                          _doSomethingRequiringAuth(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                        ),
-                        child: Text(
-                          'Criar Incidente',
-                        )),
-                  ],
-                );
-              }
-            }));
+      );
+    }).toList();
+    return Scaffold(
+      backgroundColor: Colors.orange[100],
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: const Text(
+          'CopWatch',
+          style: TextStyle(
+            fontSize: 26, // Change the font size
+            fontFamily: 'Bebes Neue', // Change the font family
+            fontWeight: FontWeight.bold, // Change the font weight
+            color: Color.fromARGB(255, 0, 0, 0), // Change the text color
+            fontStyle: FontStyle.normal, // Change the font style
+          ),
+        ),
+      ),
+      drawer: CustomDrawer(),
+      body: FlutterMap(
+        options: new MapOptions(
+            center: new LatLng(-8.049898597727989, -34.904375418630245),
+            zoom: 14.0),
+        children: [
+          TileLayer(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c']),
+          MarkerLayer(markers: markers)
+        ],
+      ),
+    );
   }
 }
