@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:incident/listaIncidentes.dart';
 import 'package:incident/criarIncidente.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:latlong2/latlong.dart';
 import 'firebase_options.dart';
 import 'package:incident/login.dart';
+import 'package:incident/mapaHome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
@@ -49,6 +51,11 @@ class IncidentApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  final List<LatLng> incidentLocations = [
+    LatLng(-8.058488275256941, -34.92830895827107),
+    LatLng(-8.05788189940112, -34.92422613999412)
+  ];
+
   MyHomePage({super.key});
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -131,9 +138,27 @@ class MyHomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                        width: double.infinity,
-                        child: Image.asset('assets/images/Incidentes.jpg')),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Map(incidentLocations)),
+                          );
+                          _doSomethingRequiringAuth(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                        ),
+                        child: Text(
+                          'Mapa de calor',
+                        )),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.push(

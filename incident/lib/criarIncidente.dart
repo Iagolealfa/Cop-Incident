@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:incident/mapaCreate.dart';
 
 class CreateIncidentModel {
   File _storedImage = File('assets/images/Incidentes.jpg');
@@ -43,7 +44,6 @@ class CreateIncidentModel {
         'idade': incident.idade,
         'genero': incident.genero,
         'raca': incident.raca,
-        'endereco': incident.endereco,
         'descricao': incident.descricao,
       });
 
@@ -92,7 +92,6 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
     idade: 0,
     genero: '',
     raca: '',
-    endereco: '',
     descricao: '',
   );
   final _formKey = GlobalKey<FormState>();
@@ -178,17 +177,6 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                 SizedBox(height: 25),
                 TextFormField(
                   decoration:
-                      InputDecoration(hintText: 'Endereço do Incidente'),
-                  validator: _validateField,
-                  onChanged: (value) {
-                    setState(() {
-                      _incident.endereco = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 25),
-                TextFormField(
-                  decoration:
                       InputDecoration(hintText: 'Descrição do Incidente'),
                   validator: _validateField,
                   maxLength: 500,
@@ -198,6 +186,21 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       _incident.descricao = value;
                     });
                   },
+                ),
+                Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.location_on,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LocationSelectionScreen()),
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(height: 5),
                 Center(
@@ -248,7 +251,6 @@ class Incident {
   int idade;
   String genero;
   String raca;
-  String endereco;
   String descricao;
 
   Incident({
@@ -257,7 +259,6 @@ class Incident {
     required this.idade,
     required this.genero,
     required this.raca,
-    required this.endereco,
     required this.descricao,
   });
 }
