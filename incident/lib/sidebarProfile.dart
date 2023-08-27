@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incident/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:incident/criarIncidente.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -80,7 +78,6 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
-          // Add more list items as needed
         ],
       ),
     );
