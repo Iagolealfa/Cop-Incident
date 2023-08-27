@@ -61,6 +61,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
+                    print(
+                        'Localização selecionada: ${selectedLocation.latitude}, ${selectedLocation.longitude}');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
