@@ -31,7 +31,7 @@ class CreateIncidentModel {
       print("Nenhuma imagem selecionada");
     }
   }
-
+  bool _isVisible = true;
   void storeIncidentInFirestore(Incident incident) async {
     try {
       CollectionReference incidentsRef =
@@ -45,6 +45,7 @@ class CreateIncidentModel {
         'raca': incident.raca,
         'endereco': incident.endereco,
         'descricao': incident.descricao,
+        'isVisible': _isVisible,
       });
 
       print('Incident armazenado com sucesso no Firestore!');
@@ -279,7 +280,6 @@ class ResponseScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
                 Navigator.pop(context);
               },
               child: Text('Voltar para Tela Inicial'),
