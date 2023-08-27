@@ -4,6 +4,10 @@ import 'package:incident/main.dart';
 import 'package:incident/criarConta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident/recuperarSenha.dart';
+export '../login.dart';
+
+String nomeUsuario = "Usuário não logado";
+String? emailUsuario = " ";
 
 class LoginModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -51,6 +55,8 @@ class LoginController {
       String? userName = await _model.getUserName(userCredential.user!.uid);
       if (userName != null) {
         print('Usuário logado: ${userCredential.user!.email}');
+        nomeUsuario = userName;
+        emailUsuario = userCredential.user!.email;
         print('Nome do usuário: $userName');
 
         Navigator.pushReplacement(

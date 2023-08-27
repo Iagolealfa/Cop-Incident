@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 class CreateIncidentModel {
   File _storedImage = File('assets/images/Incidentes.jpg');
 
-  Future<void> takePicture() async {
+  Future<void> takePictureFromG() async {
     final ImagePicker _picker = ImagePicker();
     XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
@@ -68,8 +68,8 @@ class CreateIncidentController {
     );
   }
 
-  Future<void> takePicture() async {
-    await _model.takePicture();
+  Future<void> takePictureFromG() async {
+    await _model.takePictureFromG();
   }
 
   Future<void> takePhoto() async {
@@ -211,6 +211,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     },
                   ),
                 ),
+                SizedBox(height: 50),
                 Center(
                   child: IconButton(
                     icon: Icon(
@@ -218,7 +219,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       size: 50,
                     ),
                     onPressed: () {
-                      _controller.takePicture();
+                      _controller.takePictureFromG();
                     },
                   ),
                 ),
