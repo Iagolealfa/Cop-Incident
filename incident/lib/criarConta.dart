@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:incident/login.dart';
 import 'package:incident/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -115,7 +116,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       });
       return;
     }
-
+    emailUsuario = email;
+    nomeUsuario = usuario;
     _controller.createAccount(
         context, email, password, confirmPassword, usuario);
   }

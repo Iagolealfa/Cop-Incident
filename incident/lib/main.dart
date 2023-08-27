@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:incident/listaIncidentes.dart';
 import 'package:incident/criarIncidente.dart';
+import 'package:incident/sidebarProfile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:latlong2/latlong.dart';
 import 'firebase_options.dart';
@@ -128,6 +129,7 @@ class MyHomePage extends StatelessWidget {
                 ))
           ],
         ),
+        drawer: CustomDrawer(),
         body: StreamBuilder<User?>(
             stream: _auth.authStateChanges(),
             builder: (context, snapshot) {

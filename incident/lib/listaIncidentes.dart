@@ -18,7 +18,10 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
 
   void _buscarIncidents() {
     _incidentsStream =
-        FirebaseFirestore.instance.collection('incidents').snapshots();
+        FirebaseFirestore.instance
+        .collection('incidents')
+        .where('isVisible', isEqualTo: true)
+        .snapshots();
   }
 
   @override
@@ -49,11 +52,10 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
                 key: Key(itemId),
                 direction: DismissDirection.horizontal,
                 onDismissed: (direction) async {
-                  // Remove o item do Firestore
                   await FirebaseFirestore.instance
-                      .collection('incidents')
-                      .doc(itemId)
-                      .delete();
+                    .collection('incidents')
+                    .doc(itemId)
+                    .update({'isVisible': false});
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -62,12 +64,10 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
                         label: 'Desfazer',
                         onPressed: () async {
                           // Re-adiciona o item ao Firestore
-                          final Map<String, dynamic> itemMap =
-                              item as Map<String, dynamic>;
                           await FirebaseFirestore.instance
-                              .collection('incidents')
-                              .doc(itemId)
-                              .set(itemMap);
+                            .collection('incidents')
+                            .doc(itemId)
+                            .update({'isVisible': true});
                         },
                       ),
                     ),

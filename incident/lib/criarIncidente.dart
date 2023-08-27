@@ -7,7 +7,7 @@ import 'package:incident/mapaCreate.dart';
 class CreateIncidentModel {
   File _storedImage = File('assets/images/Incidentes.jpg');
 
-  Future<void> takePicture() async {
+  Future<void> takePictureFromG() async {
     final ImagePicker _picker = ImagePicker();
     XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
@@ -32,7 +32,7 @@ class CreateIncidentModel {
       print("Nenhuma imagem selecionada");
     }
   }
-
+  bool _isVisible = true;
   void storeIncidentInFirestore(Incident incident) async {
     try {
       CollectionReference incidentsRef =
@@ -45,6 +45,7 @@ class CreateIncidentModel {
         'genero': incident.genero,
         'raca': incident.raca,
         'descricao': incident.descricao,
+        'isVisible': _isVisible,
       });
 
       print('Incident armazenado com sucesso no Firestore!');
@@ -68,8 +69,8 @@ class CreateIncidentController {
     );
   }
 
-  Future<void> takePicture() async {
-    await _model.takePicture();
+  Future<void> takePictureFromG() async {
+    await _model.takePictureFromG();
   }
 
   Future<void> takePhoto() async {
@@ -214,6 +215,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     },
                   ),
                 ),
+                SizedBox(height: 50),
                 Center(
                   child: IconButton(
                     icon: Icon(
@@ -221,7 +223,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       size: 50,
                     ),
                     onPressed: () {
-                      _controller.takePicture();
+                      _controller.takePictureFromG();
                     },
                   ),
                 ),
@@ -280,7 +282,6 @@ class ResponseScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
                 Navigator.pop(context);
               },
               child: Text('Voltar para Tela Inicial'),
