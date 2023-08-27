@@ -19,10 +19,10 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: Icon(Icons.format_list_bulleted),
             title: Text('Meus Incidentes'),
             onTap: () {
-              // Navigate to settings page
+                Navigator.pushNamed(context, '/listaInfinita');
             },
           ),
           // Add more list items as needed
