@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'package:incident/login.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 class IncidentLocationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -73,12 +74,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final IncidentLocationService _locationService = IncidentLocationService();
-  List<LatLng> incidentLocations = []; // Store incident locations here
+  List<LatLng> incidentLocations = [];
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
+
     fetchIncidentLocations();
+
+    _timer = Timer.periodic(Duration(minutes: 1), (Timer t) {
+      fetchIncidentLocations();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void fetchIncidentLocations() async {
