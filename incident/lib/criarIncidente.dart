@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:incident/mapaCreate.dart';
+import 'package:incident/login.dart';
 
 class CreateIncidentModel {
   File _storedImage = File('assets/images/Incidentes.jpg');
@@ -50,6 +51,7 @@ class CreateIncidentModel {
         'latitude': incident.localdoincidente.latitude,
         'longitude': incident.localdoincidente.longitude,
         'isVisible': _isVisible,
+        'usuario':incident.usuario,
       });
 
       print('Incident armazenado com sucesso no Firestore!');
@@ -99,6 +101,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
     raca: '',
     descricao: '',
     localdoincidente: LatLng(0, 0),
+    usuario: nomeUsuario,
   );
   TextEditingController salvaFormulario = TextEditingController(text: 'titulo');
 
@@ -262,6 +265,7 @@ class Incident {
   String raca;
   String descricao;
   LatLng localdoincidente;
+  String usuario;
 
   Incident({
     required this.titulo,
@@ -271,6 +275,7 @@ class Incident {
     required this.raca,
     required this.descricao,
     required this.localdoincidente,
+    required this.usuario,
   });
 }
 

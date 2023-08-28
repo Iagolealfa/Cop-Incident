@@ -14,14 +14,14 @@ class EditarItemTela extends StatefulWidget {
 class _EditarItemTelaState extends State<EditarItemTela> {
   TextEditingController _tituloController = TextEditingController();
   TextEditingController _descricaoController = TextEditingController();
-  TextEditingController _enderecoController = TextEditingController();
+ 
 
   @override
   void initState() {
     super.initState();
     _tituloController.text = widget.itemData['titulo'];
     _descricaoController.text = widget.itemData['descricao'];
-    _enderecoController.text = widget.itemData['endereco'];
+
   }
 
   @override
@@ -42,10 +42,7 @@ class _EditarItemTelaState extends State<EditarItemTela> {
               controller: _descricaoController,
               decoration: InputDecoration(labelText: 'Descrição'),
             ),
-            TextFormField(
-              controller: _enderecoController,
-              decoration: InputDecoration(labelText: 'Endereço'),
-            ),
+
             ElevatedButton(
               onPressed: () {
                 _salvarAlteracoes();
@@ -61,7 +58,7 @@ class _EditarItemTelaState extends State<EditarItemTela> {
   void _salvarAlteracoes() async {
     final novoTitulo = _tituloController.text;
     final novaDescricao = _descricaoController.text;
-    final novoEndereco = _enderecoController.text;
+
 
     await FirebaseFirestore.instance
         .collection('incidents')
@@ -69,7 +66,7 @@ class _EditarItemTelaState extends State<EditarItemTela> {
         .update({
       'title': novoTitulo,
       'descricao': novaDescricao,
-      'date': novoEndereco,
+
     });
 
     Navigator.pop(context);

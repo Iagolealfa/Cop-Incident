@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident/editarIncidente.dart';
+import 'package:incident/login.dart';
 
 class ListaInfinitaTela extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
         FirebaseFirestore.instance
         .collection('incidents')
         .where('isVisible', isEqualTo: true)
+        .where('usuario', isEqualTo: nomeUsuario)
         .snapshots();
   }
 
@@ -82,7 +84,7 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
                   ),
                 ),
                 child: ListTile(
-                  title: Text('$itemId'),
+                  title: Text((item as Map<String, dynamic>)['titulo']),
                   onTap: () {
                     // Abrir a tela de edição ao tocar no item
                     Navigator.push(
