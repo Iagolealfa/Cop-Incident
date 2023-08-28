@@ -132,7 +132,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
               controller: _usuarioController,

@@ -87,7 +87,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
               controller: _emailController,
@@ -100,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             SizedBox(height: 24),
             ElevatedButton(
               onPressed: _sendPasswordResetEmail,
-              child: Text('Enviar E-mail de Recuperação de Senha'),
+              child: Text('Enviar'),
             ),
           ],
         ),
