@@ -72,6 +72,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Logout'),
             onTap: () {
               signOut();
+              nomeUsuario = "Usuário não logado.";
+              emailUsuario = " ";
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LoginScreen()),
