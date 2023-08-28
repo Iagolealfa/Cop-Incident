@@ -5,13 +5,25 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:latlong2/latlong.dart';
 import 'firebase_options.dart';
 import 'package:incident/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-final List<LatLng> incidentLocations = [
-  LatLng(-8.058488275256941, -34.92830895827107),
-  LatLng(-8.05788189940112, -34.92422613999412)
-];
+class IncidentLocationService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<List<LatLng>> fetchIncidentLocations() async {
+    QuerySnapshot snapshot = await _firestore.collection('incidents').get();
+
+    List<LatLng> locations = snapshot.docs.map((DocumentSnapshot document) {
+      double latitude = document['latitude'];
+      double longitude = document['longitude'];
+      return LatLng(latitude, longitude);
+    }).toList();
+
+    return locations;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -29,7 +41,7 @@ class IncidentApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(incidentLocations: incidentLocations),
+        '/': (context) => MyHomePage(),
         '/listaInfinita': (context) => ListaInfinitaTela(),
         '/login': (context) => LoginScreen(),
       },
@@ -54,23 +66,27 @@ class IncidentApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final List<LatLng> incidentLocations;
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
 
-  MyHomePage({Key? key, required this.incidentLocations}) : super(key: key);
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _MyHomePageState extends State<MyHomePage> {
+  final IncidentLocationService _locationService = IncidentLocationService();
+  List<LatLng> incidentLocations = []; // Store incident locations here
 
-  void _doSomethingRequiringAuth(BuildContext context) {
-    if (_auth.currentUser != null) {
-      print('Ação realizada com sucesso!');
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    fetchIncidentLocations();
+  }
+
+  void fetchIncidentLocations() async {
+    List<LatLng> locations = await _locationService.fetchIncidentLocations();
+
+    setState(() {
+      incidentLocations = locations;
+    });
   }
 
   @override
@@ -103,11 +119,11 @@ class MyHomePage extends StatelessWidget {
         title: const Text(
           'CopWatch',
           style: TextStyle(
-            fontSize: 26, // Change the font size
-            fontFamily: 'Bebes Neue', // Change the font family
-            fontWeight: FontWeight.bold, // Change the font weight
-            color: Color.fromARGB(255, 0, 0, 0), // Change the text color
-            fontStyle: FontStyle.normal, // Change the font style
+            fontSize: 26,
+            fontFamily: 'Bebes Neue',
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontStyle: FontStyle.normal,
           ),
         ),
       ),

@@ -43,8 +43,7 @@ class CreateAccountController {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              MyHomePage(incidentLocations: incidentLocations),
+          builder: (context) => MyHomePage(),
         ),
       );
     } else {
