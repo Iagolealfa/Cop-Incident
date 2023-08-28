@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:incident/mapaCreate.dart';
 
 class CreateIncidentModel {
@@ -32,6 +33,7 @@ class CreateIncidentModel {
       print("Nenhuma imagem selecionada");
     }
   }
+
   bool _isVisible = true;
   void storeIncidentInFirestore(Incident incident) async {
     try {
@@ -45,6 +47,8 @@ class CreateIncidentModel {
         'genero': incident.genero,
         'raca': incident.raca,
         'descricao': incident.descricao,
+        'latitude': incident.localdoincidente.latitude,
+        'longitude': incident.localdoincidente.longitude,
         'isVisible': _isVisible,
       });
 
@@ -94,7 +98,10 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
     genero: '',
     raca: '',
     descricao: '',
+    localdoincidente: LatLng(0, 0),
   );
+  TextEditingController salvaFormulario = TextEditingController(text: 'titulo');
+
   final _formKey = GlobalKey<FormState>();
 
   String? _validateField(String? value) {
@@ -194,8 +201,8 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       Icons.location_on,
                       size: 50,
                     ),
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      _incident.localdoincidente = await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => LocationSelectionScreen()),
@@ -203,7 +210,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     },
                   ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 50),
                 Center(
                   child: IconButton(
                     icon: Icon(
@@ -254,6 +261,7 @@ class Incident {
   String genero;
   String raca;
   String descricao;
+  LatLng localdoincidente;
 
   Incident({
     required this.titulo,
@@ -262,6 +270,7 @@ class Incident {
     required this.genero,
     required this.raca,
     required this.descricao,
+    required this.localdoincidente,
   });
 }
 

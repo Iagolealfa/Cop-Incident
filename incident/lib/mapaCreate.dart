@@ -3,6 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:incident/criarIncidente.dart';
 
+LatLng localdoincidenteGlobal = LatLng(-8.049898597727989, -34.904375418630245);
+
 class LocationSelectionScreen extends StatefulWidget {
   @override
   _LocationSelectionScreenState createState() =>
@@ -53,25 +55,14 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          localdoincidenteGlobal =
+              LatLng(selectedLocation.latitude, selectedLocation.longitude);
+          Navigator.pop(context, localdoincidenteGlobal);
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
               title: Text('Localização'),
-              content: Text('Localização selecionada com sucesso.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    print(
-                        'Localização selecionada: ${selectedLocation.latitude}, ${selectedLocation.longitude}');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateIncidentScreen()),
-                    );
-                  },
-                  child: Text('Ok'),
-                ),
-              ],
+              content: Text('Localização selecionada com sucesso!'),
             ),
           );
         },
