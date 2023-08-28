@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text(
-          'CopWatch',
+          'CopIncident',
           style: TextStyle(
             fontSize: 26,
             fontFamily: 'Bebes Neue',

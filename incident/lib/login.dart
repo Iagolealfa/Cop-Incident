@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'CopWatch',
+              'CopIncident',
               style: TextStyle(
                 fontSize: 34,
                 fontFamily: 'Bebes Neue',
