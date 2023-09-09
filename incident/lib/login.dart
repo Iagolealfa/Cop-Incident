@@ -4,10 +4,30 @@ import 'package:incident/main.dart';
 import 'package:incident/criarConta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident/recuperarSenha.dart';
-export '../login.dart';
 
-String nomeUsuario = "Usuário não logado";
-String? emailUsuario = " ";
+class User {
+  final String uid;
+  final String email;
+  final String? userName;
+
+  User({required this.uid, required this.email, this.userName});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'userName': userName,
+    };
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      uid: json['uid'],
+      email: json['email'],
+      userName: json['userName'],
+    );
+  }
+}
 
 class LoginModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,12 +50,15 @@ class LoginModel {
     }
   }
 
-  Future<String?> getUserName(String uid) async {
+  Future<User?> getUser(String uid) async {
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(uid).get();
-      String? userName = userDoc.get('usuario');
-      return userName;
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        return User.fromJson(userData);
+      }
+      return null;
     } catch (e) {
       return null;
     }
@@ -52,12 +75,10 @@ class LoginController {
     UserCredential? userCredential = await _model.login(email, password);
 
     if (userCredential != null) {
-      String? userName = await _model.getUserName(userCredential.user!.uid);
-      if (userName != null) {
-        print('Usuário logado: ${userCredential.user!.email}');
-        nomeUsuario = userName;
-        emailUsuario = userCredential.user!.email;
-        print('Nome do usuário: $userName');
+      User? user = await _model.getUser(userCredential.user!.uid);
+      if (user != null) {
+        nomeUsuario = user.userName ?? "Usuário sem nome";
+        emailUsuario = user.email;
 
         Navigator.pushReplacement(
           context,
@@ -97,6 +118,9 @@ class LoginController {
     }
   }
 }
+
+String nomeUsuario = "Usuário não logado";
+String? emailUsuario = " ";
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -163,7 +187,6 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 12),
             TextButton(
               onPressed: () {
-                // Navegar para a tela de criação de nova conta
                 Navigator.push(
                   context,
                   MaterialPageRoute(

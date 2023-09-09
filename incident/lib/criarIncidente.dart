@@ -6,6 +6,58 @@ import 'package:latlong2/latlong.dart';
 import 'package:incident/mapaCreate.dart';
 import 'package:incident/login.dart';
 
+class Incident {
+  String titulo;
+  String nome;
+  int idade;
+  bool isVisible;
+  String genero;
+  String raca;
+  String descricao;
+  LatLng localdoincidente;
+  String usuario;
+
+  Incident({
+    required this.titulo,
+    required this.nome,
+    required this.idade,
+    required this.isVisible,
+    required this.genero,
+    required this.raca,
+    required this.descricao,
+    required this.localdoincidente,
+    required this.usuario,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'titulo': titulo,
+      'nome': nome,
+      'idade': idade,
+      'isVisible': isVisible,
+      'genero': genero,
+      'raca': raca,
+      'descricao': descricao,
+      'latitude': localdoincidente.latitude,
+      'longitude': localdoincidente.longitude,
+      'usuario': usuario,
+    };
+  }
+
+  factory Incident.fromJson(Map<String, dynamic> json) {
+    return Incident(
+      titulo: json['titulo'],
+      nome: json['nome'],
+      idade: json['idade'],
+      isVisible: json['isVisible'],
+      genero: json['genero'],
+      raca: json['raca'],
+      descricao: json['descricao'],
+      localdoincidente: LatLng(json['latitude'], json['longitude']),
+      usuario: json['usuario'],
+    );
+  }
+}
+
 class CreateIncidentModel {
   File _storedImage = File('assets/images/Incidentes.jpg');
 
@@ -17,9 +69,7 @@ class CreateIncidentModel {
 
     if (imageFile != null) {
       _storedImage = File(imageFile.path);
-    } else {
-      print("Nenhuma imagem selecionada");
-    }
+    } else {}
   }
 
   Future<void> takePhoto() async {
@@ -30,23 +80,16 @@ class CreateIncidentModel {
 
     if (imageFile != null) {
       _storedImage = File(imageFile.path);
-    } else {
-      print("Nenhuma imagem selecionada");
-    }
+    } else {}
   }
 
-  bool _isVisible = true;
   void storeIncidentInFirestore(Map<String, dynamic> incidentData) async {
     try {
       CollectionReference incidentsRef =
           FirebaseFirestore.instance.collection('incidents');
 
       await incidentsRef.add(incidentData);
-
-      print('Incident armazenado com sucesso no Firestore!');
-    } catch (e) {
-      print('Erro ao armazenar o incident no Firestore: $e');
-    }
+    } catch (e) {}
   }
 }
 
@@ -271,58 +314,6 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class Incident {
-  String titulo;
-  String nome;
-  int idade;
-  bool isVisible;
-  String genero;
-  String raca;
-  String descricao;
-  LatLng localdoincidente;
-  String usuario;
-
-  Incident({
-    required this.titulo,
-    required this.nome,
-    required this.idade,
-    required this.isVisible,
-    required this.genero,
-    required this.raca,
-    required this.descricao,
-    required this.localdoincidente,
-    required this.usuario,
-  });
-  Map<String, dynamic> toJson() {
-    return {
-      'titulo': titulo,
-      'nome': nome,
-      'idade': idade,
-      'isVisible': isVisible,
-      'genero': genero,
-      'raca': raca,
-      'descricao': descricao,
-      'latitude': localdoincidente.latitude,
-      'longitude': localdoincidente.longitude,
-      'usuario': usuario,
-    };
-  }
-
-  factory Incident.fromJson(Map<String, dynamic> json) {
-    return Incident(
-      titulo: json['titulo'],
-      nome: json['nome'],
-      idade: json['idade'],
-      isVisible: json['isVisible'],
-      genero: json['genero'],
-      raca: json['raca'],
-      descricao: json['descricao'],
-      localdoincidente: LatLng(json['latitude'], json['longitude']),
-      usuario: json['usuario'],
     );
   }
 }
