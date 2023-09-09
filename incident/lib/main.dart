@@ -110,12 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         height: 30.0,
         point: latlng,
         builder: (ctx) => GestureDetector(
-          onTap: () {
-            // ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-            //   content: Text(
-            //       "Latitude = ${latlng.latitude.toString()} :: Longitude = ${latlng.longitude.toString()}"),
-            // ));
-          },
+          onTap: () {},
           child: Container(
             child: Icon(
               Icons.warning,

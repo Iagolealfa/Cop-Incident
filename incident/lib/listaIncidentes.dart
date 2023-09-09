@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident/editarIncidente.dart';
+import 'package:incident/criarIncidente.dart';
 import 'package:incident/login.dart';
 
 class ListaInfinitaTela extends StatefulWidget {
@@ -18,8 +19,7 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
   }
 
   void _buscarIncidents() {
-    _incidentsStream =
-        FirebaseFirestore.instance
+    _incidentsStream = FirebaseFirestore.instance
         .collection('incidents')
         .where('isVisible', isEqualTo: true)
         .where('usuario', isEqualTo: nomeUsuario)
@@ -29,78 +29,79 @@ class _ListaInfinitaTelaState extends State<ListaInfinitaTela> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Lista Incidentes'),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _incidentsStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          }
+        appBar: AppBar(
+          title: Text('Lista Incidentes'),
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: _incidentsStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
 
-          if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}');
-          }
+            if (snapshot.hasError) {
+              return Text('Erro: ${snapshot.error}');
+            }
 
-          final List<QueryDocumentSnapshot> incidents = snapshot.data!.docs;
+            final List<QueryDocumentSnapshot> incidents = snapshot.data!.docs;
 
-          return ListView.builder(
-            itemCount: incidents.length,
-            itemBuilder: (context, index) {
-              final item = incidents[index].data();
-              final itemId = incidents[index].id;
-              return Dismissible(
-                key: Key(itemId),
-                direction: DismissDirection.horizontal,
-                onDismissed: (direction) async {
-                  await FirebaseFirestore.instance
-                    .collection('incidents')
-                    .doc(itemId)
-                    .update({'isVisible': false});
+            return ListView.builder(
+              itemCount: incidents.length,
+              itemBuilder: (context, index) {
+                final incidentData =
+                    incidents[index].data() as Map<String, dynamic>;
+                final incidentId = incidents[index].id;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Item removido: $itemId'),
-                      action: SnackBarAction(
-                        label: 'Desfazer',
-                        onPressed: () async {
-                          // Re-adiciona o item ao Firestore
-                          await FirebaseFirestore.instance
-                            .collection('incidents')
-                            .doc(itemId)
-                            .update({'isVisible': true});
-                        },
-                      ),
-                    ),
-                  );
-                },
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                ),
-                child: ListTile(
-                  title: Text((item as Map<String, dynamic>)['titulo']),
-                  onTap: () {
-                    // Abrir a tela de edição ao tocar no item
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EditarItemTela(itemId: itemId, itemData: item as Map<String, dynamic>),
+                final incident = Incident.fromJson(incidentData);
+
+                return Dismissible(
+                  key: Key(incidentId),
+                  direction: DismissDirection.horizontal,
+                  onDismissed: (direction) async {
+                    await FirebaseFirestore.instance
+                        .collection('incidents')
+                        .doc(incidentId)
+                        .update({'isVisible': false});
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Item removido: $incidentId'),
+                        action: SnackBarAction(
+                          label: 'Desfazer',
+                          onPressed: () async {
+                            await FirebaseFirestore.instance
+                                .collection('incidents')
+                                .doc(incidentId)
+                                .update({'isVisible': true});
+                          },
+                        ),
                       ),
                     );
                   },
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
+                  ),
+                  child: ListTile(
+                    title: Text(incident.titulo),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditarItemTela(
+                              itemId: incidentId, itemData: incidentData),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        ));
   }
 }

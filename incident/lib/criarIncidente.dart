@@ -87,6 +87,7 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
     titulo: '',
     nome: '',
     idade: 0,
+    isVisible: true,
     genero: 'Gênero',
     raca: 'Raça',
     descricao: '',
@@ -171,25 +172,14 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       _incident.raca = newValue ?? "Raça";
                     });
                   },
-                  items: <String>['Raça', 'Branco', 'Preto/Pardo', 'Outro']
+                  items: <String>['Raça', 'Branco', 'Preto', 'Pardo', 'Outro']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList(),
-                )
-/*
-                TextFormField(
-                  decoration: InputDecoration(hintText: 'Raça'),
-                  validator: _validateField,
-                  onChanged: (value) {
-                    setState(() {
-                      _incident.raca = value;
-                    });
-                  },
-                )*/
-                ,
+                ),
                 SizedBox(height: 25),
                 DropdownButton<String>(
                   value: _incident.genero,
@@ -202,26 +192,15 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                     'Gênero',
                     'Masculino',
                     'Feminino',
-                    'Prefiro Não Informar'
+                    'Transgênero',
+                    'Não Informar'
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList(),
-                )
-
-                /*
-                TextFormField(
-                  decoration: InputDecoration(hintText: 'Gênero'),
-                  validator: _validateField,
-                  onChanged: (value) {
-                    setState(() {
-                      _incident.genero = value;
-                    });
-                  },
-                )*/
-                ,
+                ),
                 SizedBox(height: 25),
                 TextFormField(
                   decoration:
@@ -300,6 +279,7 @@ class Incident {
   String titulo;
   String nome;
   int idade;
+  bool isVisible;
   String genero;
   String raca;
   String descricao;
@@ -310,6 +290,7 @@ class Incident {
     required this.titulo,
     required this.nome,
     required this.idade,
+    required this.isVisible,
     required this.genero,
     required this.raca,
     required this.descricao,
@@ -321,6 +302,7 @@ class Incident {
       'titulo': titulo,
       'nome': nome,
       'idade': idade,
+      'isVisible': isVisible,
       'genero': genero,
       'raca': raca,
       'descricao': descricao,
@@ -335,6 +317,7 @@ class Incident {
       titulo: json['titulo'],
       nome: json['nome'],
       idade: json['idade'],
+      isVisible: json['isVisible'],
       genero: json['genero'],
       raca: json['raca'],
       descricao: json['descricao'],
