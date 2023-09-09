@@ -51,7 +51,7 @@ class CreateIncidentModel {
         'latitude': incident.localdoincidente.latitude,
         'longitude': incident.localdoincidente.longitude,
         'isVisible': _isVisible,
-        'usuario':incident.usuario,
+        'usuario': incident.usuario,
       });
 
       print('Incident armazenado com sucesso no Firestore!');
@@ -97,8 +97,8 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
     titulo: '',
     nome: '',
     idade: 0,
-    genero: '',
-    raca: '',
+    genero: 'Gênero',
+    raca: 'Raça',
     descricao: '',
     localdoincidente: LatLng(0, 0),
     usuario: nomeUsuario,
@@ -112,6 +112,14 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
       return 'Este campo é obrigatório';
     }
     return null;
+  }
+
+  bool isValidRaca(String? value) {
+    return value != 'Raça';
+  }
+
+  bool isValidGenero(String? value) {
+    return value != 'Gênero';
   }
 
   @override
@@ -166,6 +174,22 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                   },
                 ),
                 SizedBox(height: 25),
+                DropdownButton<String>(
+                  value: _incident.raca,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _incident.raca = newValue ?? "Raça";
+                    });
+                  },
+                  items: <String>['Raça', 'Branco', 'Preto/Pardo', 'Outro']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                )
+/*
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Raça'),
                   validator: _validateField,
@@ -174,8 +198,30 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       _incident.raca = value;
                     });
                   },
-                ),
+                )*/
+                ,
                 SizedBox(height: 25),
+                DropdownButton<String>(
+                  value: _incident.genero,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _incident.genero = newValue ?? "Prefiro Não Informar";
+                    });
+                  },
+                  items: <String>[
+                    'Gênero',
+                    'Masculino',
+                    'Feminino',
+                    'Prefiro Não Informar'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                )
+
+                /*
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Gênero'),
                   validator: _validateField,
@@ -184,7 +230,8 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                       _incident.genero = value;
                     });
                   },
-                ),
+                )*/
+                ,
                 SizedBox(height: 25),
                 TextFormField(
                   decoration:
@@ -241,7 +288,9 @@ class _CreateIncidentScreenState extends State<CreateIncidentScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
+                      if ((_formKey.currentState!.validate()) &&
+                          isValidGenero(_incident.genero) &&
+                          isValidRaca(_incident.raca)) {
                         _controller.createIncident(context, _incident);
                       }
                     },
