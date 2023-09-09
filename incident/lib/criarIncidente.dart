@@ -36,23 +36,12 @@ class CreateIncidentModel {
   }
 
   bool _isVisible = true;
-  void storeIncidentInFirestore(Incident incident) async {
+  void storeIncidentInFirestore(Map<String, dynamic> incidentData) async {
     try {
       CollectionReference incidentsRef =
           FirebaseFirestore.instance.collection('incidents');
 
-      await incidentsRef.add({
-        'titulo': incident.titulo,
-        'nome': incident.nome,
-        'idade': incident.idade,
-        'genero': incident.genero,
-        'raca': incident.raca,
-        'descricao': incident.descricao,
-        'latitude': incident.localdoincidente.latitude,
-        'longitude': incident.localdoincidente.longitude,
-        'isVisible': _isVisible,
-        'usuario':incident.usuario,
-      });
+      await incidentsRef.add(incidentData);
 
       print('Incident armazenado com sucesso no Firestore!');
     } catch (e) {
@@ -67,7 +56,8 @@ class CreateIncidentController {
   CreateIncidentController(this._model);
 
   Future<void> createIncident(BuildContext context, Incident incident) async {
-    _model.storeIncidentInFirestore(incident);
+    final incidentJson = incident.toJson();
+    _model.storeIncidentInFirestore(incidentJson);
 
     Navigator.pushReplacement(
       context,
@@ -277,6 +267,32 @@ class Incident {
     required this.localdoincidente,
     required this.usuario,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'titulo': titulo,
+      'nome': nome,
+      'idade': idade,
+      'genero': genero,
+      'raca': raca,
+      'descricao': descricao,
+      'latitude': localdoincidente.latitude,
+      'longitude': localdoincidente.longitude,
+      'usuario': usuario,
+    };
+  }
+
+  factory Incident.fromJson(Map<String, dynamic> json) {
+    return Incident(
+      titulo: json['titulo'],
+      nome: json['nome'],
+      idade: json['idade'],
+      genero: json['genero'],
+      raca: json['raca'],
+      descricao: json['descricao'],
+      localdoincidente: LatLng(json['latitude'], json['longitude']),
+      usuario: json['usuario'],
+    );
+  }
 }
 
 class ResponseScreen extends StatelessWidget {
