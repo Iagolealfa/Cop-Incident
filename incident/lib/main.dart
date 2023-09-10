@@ -15,11 +15,19 @@ class IncidentLocationService {
   Future<List<LatLng>> fetchIncidentLocations() async {
     QuerySnapshot snapshot = await _firestore.collection('incidents').get();
 
-    List<LatLng> locations = snapshot.docs.map((DocumentSnapshot document) {
-      double latitude = document['latitude'];
-      double longitude = document['longitude'];
-      return LatLng(latitude, longitude);
-    }).toList();
+    List<LatLng> locations = snapshot.docs
+        .map((DocumentSnapshot document) {
+          bool isVisible = document['isVisible'];
+          if (isVisible) {
+            double latitude = document['latitude'];
+            double longitude = document['longitude'];
+            return LatLng(latitude, longitude);
+          } else {
+            return LatLng(0, 0);
+          }
+        })
+        .where((LatLng location) => location != LatLng(0, 0))
+        .toList();
 
     return locations;
   }
