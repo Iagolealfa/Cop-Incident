@@ -5,26 +5,26 @@ import 'package:incident/criarConta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident/recuperarSenha.dart';
 
-class User {
+class AppUser {
   final String uid;
   final String email;
-  final String? userName;
+  final String? usuario;
 
-  User({required this.uid, required this.email, this.userName});
+  AppUser({required this.uid, required this.email, this.usuario});
 
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
       'email': email,
-      'userName': userName,
+      'usuario': usuario,
     };
   }
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      uid: json['uid'],
-      email: json['email'],
-      userName: json['userName'],
+  factory AppUser.fromJson(Map<String, dynamic> json) {
+    return AppUser(
+      uid: json['uid'] ?? '',
+      email: json['email'] ?? '',
+      usuario: json['usuario'] ?? 'Usuário sem nome',
     );
   }
 }
@@ -50,15 +50,15 @@ class LoginModel {
     }
   }
 
-  Future<User?> getUser(String uid) async {
+  Future<AppUser?> getUser(String uid) async {
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(uid).get();
-      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
-      if (userData != null) {
-        return User.fromJson(userData);
+      if (userDoc.exists) {
+        return AppUser.fromJson(userDoc.data() as Map<String, dynamic>);
+      } else {
+        return null;
       }
-      return null;
     } catch (e) {
       return null;
     }
@@ -75,9 +75,9 @@ class LoginController {
     UserCredential? userCredential = await _model.login(email, password);
 
     if (userCredential != null) {
-      User? user = await _model.getUser(userCredential.user!.uid);
+      AppUser? user = await _model.getUser(userCredential.user!.uid);
       if (user != null) {
-        nomeUsuario = user.userName ?? "Usuário sem nome";
+        nomeUsuario = user.usuario ?? "Usuário sem nome";
         emailUsuario = user.email;
 
         Navigator.pushReplacement(

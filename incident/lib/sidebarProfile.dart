@@ -8,15 +8,11 @@ class CustomDrawer extends StatelessWidget {
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
-      print('Usuário deslogado com sucesso!');
-    } catch (e) {
-      print('Erro ao deslogar o usuário: $e');
-    }
+    } catch (e) {}
   }
 
   void _doSomethingRequiringAuth(BuildContext context) {
     if (_auth.currentUser != null) {
-      print('Ação realizada com sucesso!');
     } else {
       Navigator.push(
         context,
